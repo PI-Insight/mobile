@@ -1,9 +1,9 @@
-import FirstOpen from './FirstOpen';
+import Index from './IndexPage';
 import LoginUser from './LoginUser';
 import RegisterUser from './RegisterUser';
 
 export {
-  FirstOpen,
+  Index,
   RegisterUser,
   LoginUser
 }

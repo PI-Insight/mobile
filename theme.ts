@@ -1,33 +1,24 @@
+import { extendTheme } from 'native-base';
+import chroma from 'chroma-js';
 
-const theme = {
-  colors: {
-    text: {
-      primary: '#000000',
-      secondary: '#999999',
-    },
-    background: {
-      primary: '#FFFFFF'
-    }
-  },
-  Input: {
-    inputStyle: {
-      width: '100%',
-      borderWidth: 1,
-      borderColor: '#E8E8E8',
-      backgroundColor: '#F6F6F6',
-      borderRadius: 8,
-      padding: 12,
-    },
-    containerStyle: {
-      width: '100%',
-      paddingHorizontal: 0
-    },
-    inputContainerStyle: {
-      width: '100%',
-      borderBottomWidth: 0,
-    },
+interface IShades {
+  [key: string | number]: string
+}
+function createShades(middleColor: string) {
+  const middle = chroma(middleColor);
+  const shadeStorage: IShades = {};
 
+  for(let i = 50; i <= 900; i += i === 50? 50 : 100) {
+    shadeStorage[i] = middle.darken((i - 500) / 200).hex();
   }
-};
+
+  return shadeStorage;
+}
+
+const theme = extendTheme({
+  colors: {
+    primary: createShades('#DF2266'),
+  },
+});
 
 export default theme;

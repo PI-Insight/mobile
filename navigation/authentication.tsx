@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // Screens
-import { FirstOpen, LoginUser, RegisterUser } from "../screens";
+import { Index, LoginUser, RegisterUser } from "../screens";
 import { View } from "react-native";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack/lib/typescript/src/types";
 
@@ -12,11 +12,11 @@ const Stack = createNativeStackNavigator();
 export default function Navigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{}}>
+      <Stack.Navigator>
         <Stack.Screen
           options={{ headerShown: false }}
           name='FirstOpen'
-          component={FirstOpen}
+          component={Index}
         />
         <Stack.Screen
           options={{ headerShown: true, title: "Registrar" }}
