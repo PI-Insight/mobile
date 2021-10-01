@@ -1,34 +1,35 @@
 import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // Screens
-import { Index, LoginUser, RegisterUser } from "../screens";
-import { View } from "react-native";
-import { NativeStackHeaderProps } from "@react-navigation/native-stack/lib/typescript/src/types";
+import { IndexPage, LoginUser, RegisterUser } from "../screens/authentication";
+import MainNavigator from "./main";
 
 const Stack = createNativeStackNavigator();
 
-export default function Navigator() {
+export default function AuthenticationNavigator() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name='FirstOpen'
-          component={Index}
-        />
-        <Stack.Screen
-          options={{ headerShown: true, title: "Registrar" }}
-          name='RegisterUser'
-          component={RegisterUser}
-        />
-        <Stack.Screen
-          options={{ headerShown: true, title: "Entrar" }}
-          name='LoginUser'
-          component={LoginUser}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator>
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name='FirstOpen'
+        component={IndexPage}
+      />
+      <Stack.Screen
+        options={{ headerShown: false, title: "Registrar" }}
+        name='RegisterUser'
+        component={RegisterUser}
+      />
+      <Stack.Screen
+        options={{ headerShown: false, title: "Entrar" }}
+        name='LoginUser'
+        component={LoginUser}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name='UserLoggedIn'
+        component={MainNavigator}
+      />
+    </Stack.Navigator>
   );
 }

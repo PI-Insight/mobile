@@ -19,6 +19,16 @@ const theme = extendTheme({
   colors: {
     primary: createShades('#DF2266'),
   },
+  components: {
+    Button: {
+      baseStyle: {
+        h: '48px',
+        rounded: 24,
+        w: '100%',
+        bg: 'primary.500'
+      }
+    }
+  }
 });
 
 export default theme;

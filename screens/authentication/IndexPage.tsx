@@ -1,5 +1,5 @@
 import React from "react";
-import { ScreenProps } from "../types";
+import { ScreenProps } from "../../types";
 import { Center, Text, Button } from "native-base";
 
 export default function FirstOpen({ navigation }: ScreenProps) {
@@ -16,10 +16,10 @@ export default function FirstOpen({ navigation }: ScreenProps) {
         mb={2}
         rounded={24}
         w='100%'
-        onPress={() => {}}
+        onPress={() => navigation.navigate("RegisterUser")}
         bg='primary.500'
       >
-        Registrar-se
+        Cadastro
       </Button>
       <Text mb={2} color='gray.500'>
         Já tem uma conta?
@@ -28,10 +28,10 @@ export default function FirstOpen({ navigation }: ScreenProps) {
         h='48px'
         rounded={24}
         w='100%'
-        onPress={() => {}}
+        onPress={() => navigation.navigate("LoginUser")}
         bg='primary.500'
       >
-        Entrar
+        Login
       </Button>
     </Center>
   );
