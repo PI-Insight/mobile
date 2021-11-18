@@ -2,37 +2,31 @@ import { VStack, Button, HStack, Center, Text } from "native-base";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Alert } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch } from "react-redux";
-import { register, ResponseError } from "../../api/authentication";
+import { login } from "../../api/authentication";
 import ControlledInput from "../../components/ControlledInput";
 import { setToken } from "../../store/slices/token";
-import { setLoggedIn, setUser } from "../../store/slices/user";
+import { setUser } from "../../store/slices/user";
 import { ScreenProps } from "../../types";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { ResponseError } from "../../api/base";
 
 interface IFormValues {
-  email: string;
   username: string;
   password: string;
-  repeatPassword: string;
 }
 
-export default function RegisterUser({ navigation }: ScreenProps) {
+export default function LoginUser({ navigation }: ScreenProps) {
   const dispatch = useDispatch();
   const { control, handleSubmit, formState } = useForm<IFormValues>();
   const { isSubmitting } = formState;
 
   async function onSubmit(values: IFormValues) {
     try {
-      const response = await register(
-        values.email,
-        values.username,
-        values.password
-      );
+      const response = await login(values.username, values.password);
 
-      dispatch(setUser(response.data.user));
-      dispatch(setToken(response.data.token));
-      dispatch(setLoggedIn(true));
+      dispatch(setUser(response.user));
+      dispatch(setToken(response.token));
     } catch (e: any) {
       const error = e as ResponseError;
       Alert.alert(error.status, error.message);
@@ -50,58 +44,30 @@ export default function RegisterUser({ navigation }: ScreenProps) {
             size={24}
           />
         </Center>
-        <Center flex={1}>
+        <Center h={24} position='absolute' w='100%'>
           <Text bold fontSize={32} color='black'>
-            Cadastro
-          </Text>
-        </Center>
-        <Center h='100%'>
-          <Text
-            onPress={() => navigation.navigate("LoginUser")}
-            fontSize={16}
-            color='primary.500'
-          >
             Login
           </Text>
         </Center>
       </HStack>
 
-      <VStack mb={4} w='100%'>
+      <VStack pb={4} w='100%'>
         <ControlledInput
           name='username'
           control={control}
           bg='#F6F6F6'
           w='100%'
-          placeholder='Nome de usuário'
+          placeholder='Username'
         />
       </VStack>
-      <VStack mb={4} w='100%'>
+      <VStack w='100%'>
         <ControlledInput
-          name='email'
-          control={control}
-          bg='#F6F6F6'
-          w='100%'
-          placeholder='Email'
-        />
-      </VStack>
-      <VStack mb={4} w='100%'>
-        <ControlledInput
-          secureTextEntry
           name='password'
           control={control}
           bg='#F6F6F6'
           w='100%'
           placeholder='Senha'
-        />
-      </VStack>
-      <VStack w='100%'>
-        <ControlledInput
           secureTextEntry
-          name='confirmPassword'
-          control={control}
-          bg='#F6F6F6'
-          w='100%'
-          placeholder='Repetir Senha'
         />
       </VStack>
 
@@ -110,7 +76,10 @@ export default function RegisterUser({ navigation }: ScreenProps) {
         mt='auto'
         onPress={handleSubmit(onSubmit)}
       >
-        Cadastrar-se
+        {isSubmitting ? "" : "Entrar"}
+      </Button>
+      <Button mt={2} variant='link' onPress={() => {}}>
+        Esqueceu sua senha?
       </Button>
     </VStack>
   );
