@@ -17,7 +17,7 @@ import {
   useDisclose,
   Actionsheet,
   Input,
-  Pressable,
+  View,
 } from "native-base";
 import { IRootParamList } from "../../navigation/main";
 import useUser from "../../hooks/useUser";
@@ -29,7 +29,9 @@ import { setToken } from "../../store/slices/token";
 import * as ImagePicker from "expo-image-picker";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 import { baseURL } from "../../api/base";
-import { Alert } from "react-native";
+import { Alert, TouchableNativeFeedback } from "react-native";
+import { Touchable } from "../../components/Touchable";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface IHeaderProps {
   isSameUser: boolean;
@@ -61,18 +63,20 @@ function Header({ isSameUser }: IHeaderProps) {
   return (
     <HStack>
       <Stack flex={1}>
-        <Pressable>
-          <Ionicons size={32} color='#fff' name='settings-outline' />
-        </Pressable>
+        <Touchable borderless onPress={() => {}}>
+          <Stack p={0.5} mr='auto' rounded='full'>
+            <Ionicons size={32} color='#fff' name='settings-outline' />
+          </Stack>
+        </Touchable>
       </Stack>
       <Heading textAlign='center' flex={1} color='#fff'>
         Perfil
       </Heading>
       {isSameUser ? (
         <HStack alignItems='center' justifyContent='flex-end' flex={1}>
-          <Pressable onPress={logout}>
+          <Touchable onPress={logout}>
             <Text color='#fff'>Logout</Text>
-          </Pressable>
+          </Touchable>
         </HStack>
       ) : (
         <Box flex={1} />
@@ -91,7 +95,7 @@ function Photo({ isSameUser, photoUrl }: IPhotoProps) {
   const { isOpen, onOpen, onClose } = useDisclose();
 
   const uploadImage = useCallback(async (photo: ImageInfo) => {
-    return await setUserImage(id, photo.uri);
+    return await setUserImage(photo.uri);
   }, []);
 
   const takePhotoFromCamera = useCallback(async () => {
@@ -123,20 +127,28 @@ function Photo({ isSameUser, photoUrl }: IPhotoProps) {
   }, []);
 
   return (
-    <HStack marginY={4} justifyContent='center'>
-      <Pressable onPress={onOpen}>
-        <Box p={1} bg='white' w={48} h={48} rounded='full'>
-          <Image
-            rounded='full'
-            source={{
-              uri: photo || "https://picsum.photos/200",
-            }}
-            alt='Profile photo'
-            w='100%'
-            h='100%'
-          />
-        </Box>
-      </Pressable>
+    <>
+      <Center marginY={4}>
+        <TouchableOpacity onPress={onOpen}>
+          <Box p={0.5} bg='white' w={48} h={48} rounded='full'>
+            {!!photo ? (
+              <Image
+                rounded='full'
+                source={{
+                  uri: photo,
+                }}
+                w='100%'
+                h='100%'
+                alt='profile photo'
+              />
+            ) : (
+              <Center w='100%' h='100%'>
+                <Ionicons size={64} name='person-outline' />
+              </Center>
+            )}
+          </Box>
+        </TouchableOpacity>
+      </Center>
       <Actionsheet isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content>
           <Box w='100%' h={60} px={4} justifyContent='center'>
@@ -158,7 +170,7 @@ function Photo({ isSameUser, photoUrl }: IPhotoProps) {
           </Actionsheet.Item>
         </Actionsheet.Content>
       </Actionsheet>
-    </HStack>
+    </>
   );
 }
 
@@ -201,13 +213,13 @@ function Username({ isSameUser, user }: IUsernameProps) {
           editable={isEditing}
         />
         <Box justifyContent='center' flex={1}>
-          <Pressable onPress={toggleEditing}>
+          <Touchable onPress={toggleEditing}>
             <Ionicons
               size={24}
               color='#000'
               name={isEditing ? "checkmark-outline" : "create-outline"}
             />
-          </Pressable>
+          </Touchable>
         </Box>
       </HStack>
     );
@@ -238,7 +250,10 @@ export default function Profile({
     <VStack bg='primary.500' safeArea>
       <VStack paddingX={4}>
         <Header isSameUser={isSameUser} />
-        <Photo photoUrl={`${baseURL}/${user.image}`} isSameUser={isSameUser} />
+        <Photo
+          photoUrl={user.image ? `${baseURL}/${user.image}` : user.image}
+          isSameUser={isSameUser}
+        />
       </VStack>
       <VStack bg='#fff' p={4}>
         <Username user={user} isSameUser={isSameUser} />

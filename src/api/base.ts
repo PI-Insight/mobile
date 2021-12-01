@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios";
+import { Alert } from "react-native";
 import store from "../store";
 
 export const baseURL = "http://10.0.2.2:3000";
@@ -32,7 +33,7 @@ export class ResponseError extends Error {
   }
 }
 
-export async function apiCall<T>(fn: Function): Promise<T> {
+export async function createAPICall<T>(fn: Function): Promise<T> {
   try {
     return await fn();
   } catch (e: any) {
@@ -43,6 +44,19 @@ export async function apiCall<T>(fn: Function): Promise<T> {
     }
 
     const response = error.response!.data!;
-    throw new ResponseError(response);
+    const err = new ResponseError(response);
+    throw err;
   }
+}
+
+export function createFileForm(uri: string, fileName = "file") {
+  const formData = new FormData();
+  const type = "image/" + uri.split(".")[uri.split(".").length - 1];
+  const name = uri.split("/").pop();
+  formData.append(fileName, {
+    uri,
+    name,
+    type,
+  });
+  return formData;
 }

@@ -1,5 +1,5 @@
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
-import { apiCall, http } from "./base";
+import { createAPICall, createFileForm, http } from "./base";
 import { IProject } from "./project";
 
 export interface IUser {
@@ -8,7 +8,7 @@ export interface IUser {
   username: string;
   createdAt: string;
   updatedAt: string;
-  image: string;
+  image: string | null;
 }
 
 export interface ILoginResponse {
@@ -16,30 +16,34 @@ export interface ILoginResponse {
   token: string;
 }
 
+export async function paginateUsers(limit: number, offset: number) {
+  const response = await http.get<IUser[]>("/users", {
+    params: {
+      limit,
+      offset,
+    },
+  });
+
+  return response.data;
+}
+
 export async function getUser(id: number): Promise<IUser> {
-  return apiCall<IUser>(async () => {
+  return createAPICall<IUser>(async () => {
     const response = await http.get<IUser>(`/users/${id}`);
     return response.data;
   });
 }
 
 export async function getUserProjects(id: number): Promise<IProject[]> {
-  return apiCall<IProject[]>(async () => {
+  return createAPICall<IProject[]>(async () => {
     const response = await http.get<IProject[]>(`/users/${id}/projects`);
     return response.data;
   });
 }
 
-export async function setUserImage(id: number, uri: string) {
-  return apiCall<IUser>(async () => {
-    const formData = new FormData();
-    const type = "image/" + uri.split(".")[uri.split(".").length - 1];
-    const name = uri.split("/").pop();
-    formData.append("profile-image", {
-      uri,
-      name,
-      type,
-    });
+export async function setUserImage(uri: string) {
+  return createAPICall<IUser>(async () => {
+    const formData = createFileForm(uri, "profile-image");
     const response = await http.patch<IUser>(`/users`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -50,7 +54,7 @@ export async function setUserImage(id: number, uri: string) {
 }
 
 export async function setUsername(username: string) {
-  return apiCall<IUser>(async () => {
+  return createAPICall<IUser>(async () => {
     const response = await http.patch<IUser>(`/users`, {
       username,
     });

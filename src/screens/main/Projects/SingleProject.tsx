@@ -13,7 +13,7 @@ import React from "react";
 import { ProjectStackNavigatorParams } from ".";
 import { baseURL } from "../../../api/base";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Touchable } from "../../../components/Touchable";
 
 export function ProjectSingle({
   route,
@@ -22,14 +22,16 @@ export function ProjectSingle({
   const { project } = route.params;
 
   return (
-    <VStack space={2} p={4}>
+    <VStack space={4} p={4}>
       {!!project.image && (
         <Image
           alt='Project image'
           source={{ uri: `${baseURL}/${project.image}` }}
+          h={48}
+          rounded={4}
         />
       )}
-      <Heading>{project.name}</Heading>
+      <Heading size='2xl'>{project.name}</Heading>
 
       {!!project.description && (
         <VStack space={1}>
@@ -38,22 +40,24 @@ export function ProjectSingle({
         </VStack>
       )}
 
-      <VStack space={2}>
-        <Heading size='md'>Time responsável</Heading>
-        <TouchableOpacity>
-          <HStack alignItems='center' space={4}>
-            <Stack p={4} bg='#e5e5e5' rounded='full'>
-              <Icon
-                color='gray.400'
-                size='md'
-                as={<Ionicons name='people-outline' />}
-              />
-            </Stack>
-            <Heading color='primary.500' size='md'>
-              Time
-            </Heading>
-          </HStack>
-        </TouchableOpacity>
+      <VStack space={1}>
+        <Heading size='sm'>Time responsável</Heading>
+        <Box borderRadius={4} overflow='hidden'>
+          <Touchable borderless>
+            <HStack p={2} alignItems='center' space={2}>
+              <Stack p={4} bg='#e5e5e5' rounded='full'>
+                <Icon
+                  color='gray.400'
+                  size='md'
+                  as={<Ionicons name='people-outline' />}
+                />
+              </Stack>
+              <Heading color='primary.500' size='sm'>
+                Time
+              </Heading>
+            </HStack>
+          </Touchable>
+        </Box>
       </VStack>
     </VStack>
   );

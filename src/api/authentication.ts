@@ -1,6 +1,6 @@
-import store from '../store';
-import { apiCall, http } from './base';
-import { IUser } from './user';
+import store from "../store";
+import { createAPICall, http } from "./base";
+import { IUser } from "./user";
 
 export interface ILoginResponse {
   user: IUser;
@@ -14,15 +14,26 @@ export interface IErrorResponse {
 }
 
 export async function login(username: string, password: string) {
-  return apiCall<ILoginResponse>(async () => {
-    const response = await http.post<ILoginResponse>('/auth/login', { username, password });
+  return createAPICall<ILoginResponse>(async () => {
+    const response = await http.post<ILoginResponse>("/auth/login", {
+      username,
+      password,
+    });
     return response.data;
   });
 }
 
-export async function register(email: string, username: string, password: string) {
-  return apiCall<ILoginResponse>(async () => {
-    const response = await http.post<ILoginResponse>('/auth/register', { email, username, password });
+export async function register(
+  email: string,
+  username: string,
+  password: string
+) {
+  return createAPICall<ILoginResponse>(async () => {
+    const response = await http.post<ILoginResponse>("/auth/register", {
+      email,
+      username,
+      password,
+    });
     return response.data;
   });
 }

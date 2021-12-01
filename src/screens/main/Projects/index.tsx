@@ -1,21 +1,31 @@
 import * as React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { ProjectsList } from "./List";
-import { ProjectCreate } from "./Create";
-import { ProjectSingle } from "./Single";
+import { ProjectsList } from "./ListProjects";
+import { ProjectCreate } from "./CreateProject";
+import { ProjectSingle } from "./SingleProject";
 import { IProject } from "../../../api/project";
+import { SelectorUsers } from "../../../components/UsersSelector";
+import { UsersSelect } from "../Users/SelectUsers";
+import { IUser } from "../../../api/user";
 
 export type ProjectStackNavigatorParams = {
-  ProjectsList: undefined;
-  ProjectCreate: undefined;
+  ProjectsList: {
+    forceRefresh?: boolean;
+  };
+  ProjectCreate: {
+    selectedUsers: IUser[];
+  };
   ProjectSingle: {
     project: IProject;
+  };
+  UsersSelect: {
+    selecteds?: IUser[];
   };
 };
 
 const Stack = createNativeStackNavigator<ProjectStackNavigatorParams>();
 
-export default function AuthenticationNavigator() {
+export default function ProjectsNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -32,6 +42,11 @@ export default function AuthenticationNavigator() {
         options={{ title: "" }}
         name='ProjectSingle'
         component={ProjectSingle}
+      />
+      <Stack.Screen
+        options={{ title: "" }}
+        name='UsersSelect'
+        component={UsersSelect}
       />
     </Stack.Navigator>
   );
