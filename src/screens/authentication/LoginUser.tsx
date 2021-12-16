@@ -1,4 +1,4 @@
-import { VStack, Button, HStack, Center, Text } from "native-base";
+import { VStack, Button, HStack, Center, Text, View, Box } from "native-base";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Alert } from "react-native";
@@ -34,53 +34,48 @@ export default function LoginUser({ navigation }: ScreenProps) {
   }
 
   return (
-    <VStack bg='#FFFFFF' p={4} flex={1}>
-      <HStack w='100%' h={24}>
-        <Center h='100%'>
-          <Ionicons
-            color='#BDBDBD'
-            onPress={() => navigation.goBack()}
-            name='close'
-            size={24}
-          />
-        </Center>
-        <Center h={24} position='absolute' w='100%'>
-          <Text bold fontSize={32} color='black'>
-            Login
+    <Box justifyContent='center' safeArea bg='#FFFFFF' p={4} flex={1}>
+      <VStack space={4}>
+        <Center>
+          <Text color='black' fontSize='5xl' bold>
+            INSIGHT
+          </Text>
+          <Text mb={8} color='gray.800' fontSize='md'>
+            Mantra vem aqui
           </Text>
         </Center>
-      </HStack>
-
-      <VStack pb={4} w='100%'>
-        <ControlledInput
-          name='username'
-          control={control}
-          bg='#F6F6F6'
-          w='100%'
-          placeholder='Username'
-        />
+        <VStack w='100%'>
+          <ControlledInput
+            name='username'
+            control={control}
+            bg='#F6F6F6'
+            w='100%'
+            placeholder='Nome de usuário'
+          />
+        </VStack>
+        <VStack w='100%'>
+          <ControlledInput
+            name='password'
+            control={control}
+            bg='#F6F6F6'
+            w='100%'
+            placeholder='Senha'
+            secureTextEntry
+          />
+        </VStack>
+        <VStack mt={4} w='100%'>
+          <Button
+            isLoading={isSubmitting}
+            mt='auto'
+            onPress={handleSubmit(onSubmit)}
+          >
+            {isSubmitting ? "" : "Entrar"}
+          </Button>
+          <Button variant='link' onPress={() => {}}>
+            Esqueceu sua senha?
+          </Button>
+        </VStack>
       </VStack>
-      <VStack w='100%'>
-        <ControlledInput
-          name='password'
-          control={control}
-          bg='#F6F6F6'
-          w='100%'
-          placeholder='Senha'
-          secureTextEntry
-        />
-      </VStack>
-
-      <Button
-        isLoading={isSubmitting}
-        mt='auto'
-        onPress={handleSubmit(onSubmit)}
-      >
-        {isSubmitting ? "" : "Entrar"}
-      </Button>
-      <Button mt={2} variant='link' onPress={() => {}}>
-        Esqueceu sua senha?
-      </Button>
-    </VStack>
+    </Box>
   );
 }

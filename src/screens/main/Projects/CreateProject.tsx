@@ -1,5 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import {
+  Box,
   Button,
   FormControl,
   Input,
@@ -62,37 +63,40 @@ export function ProjectCreate({
   );
 
   return (
-    <VStack justifyContent='space-between' p={4} flex={1}>
-      <VStack space={4}>
-        <ControlledInput
-          name='name'
-          control={control}
-          placeholder='A nice name to your project'
-          label='Name'
-        />
-        <ControlledTextArea
-          label='Description'
-          name='description'
-          control={control}
-        />
-        <SelectorUsers
-          users={members}
-          onCardPress={removeMember}
-          onPress={() =>
-            navigation.navigate("UsersSelect", {
-              selecteds: members,
-            })
-          }
-        />
-        <PhotoSelector callback={(image) => setImage(image.uri)} />
-      </VStack>
+    <Box safeArea flex={1}>
+      <VStack justifyContent='space-between' p={4} flex={1}>
+        <VStack space={4}>
+          <ControlledInput
+            name='name'
+            control={control}
+            placeholder='A nice name to your project'
+            label='Name'
+          />
+          <ControlledTextArea
+            label='Description'
+            name='description'
+            control={control}
+          />
+          <SelectorUsers
+            users={members}
+            onCardPress={removeMember}
+            onPress={() =>
+              navigation.navigate("UsersSelect", {
+                selecteds: members,
+                goto: "ProjectCreate",
+              })
+            }
+          />
+          <PhotoSelector callback={(image) => setImage(image.uri)} />
+        </VStack>
 
-      <Button
-        isLoading={formState.isSubmitting}
-        onPress={handleSubmit(onSubmit)}
-      >
-        {formState.isSubmitting ? "" : "Criar"}
-      </Button>
-    </VStack>
+        <Button
+          isLoading={formState.isSubmitting}
+          onPress={handleSubmit(onSubmit)}
+        >
+          {formState.isSubmitting ? "" : "Criar"}
+        </Button>
+      </VStack>
+    </Box>
   );
 }

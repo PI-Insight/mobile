@@ -14,7 +14,7 @@ export function UsersSelect({
   route,
 }: NativeStackScreenProps<ProjectStackNavigatorParams, "UsersSelect">) {
   const limit = 10;
-  const { selecteds } = route.params;
+  const { selecteds, goto } = route.params;
 
   const [offset, setOffset] = useState(0);
   const [users, setUsers] = useState<IUser[]>([]);
@@ -22,12 +22,13 @@ export function UsersSelect({
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const loadUsers = useCallback(async () => {
+    if (isRefreshing) return;
     setIsRefreshing(true);
     const users = await paginateUsers(limit, offset);
     setUsers((oldUsers) => [...oldUsers, ...users]);
     setOffset((offset) => offset + limit);
     setIsRefreshing(false);
-  }, []);
+  }, [isRefreshing, offset]);
 
   useEffect(() => {
     loadUsers();
@@ -47,7 +48,7 @@ export function UsersSelect({
     <VStack flex={1} p={4}>
       <FlatList
         refreshing={isRefreshing}
-        onEndReachedThreshold={0.3}
+        onEndReachedThreshold={0.1}
         onEndReached={loadUsers}
         data={users}
         keyExtractor={(user) => user.id.toString()}
@@ -63,7 +64,7 @@ export function UsersSelect({
       <Button
         mt='auto'
         onPress={() => {
-          navigation.navigate("ProjectCreate", {
+          navigation.navigate(goto, {
             selectedUsers: selected,
           });
         }}

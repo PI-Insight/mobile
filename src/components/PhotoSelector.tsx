@@ -13,6 +13,7 @@ import React, { useCallback, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { Touchable } from "./Touchable";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { baseURL } from "../api/base";
 
 export enum PhotoSelectorType {
   CAMERA = "PHOTO_SELECTOR_TYPE_CAMERA",
@@ -22,9 +23,10 @@ export enum PhotoSelectorType {
 interface IPhotoSelectorProps {
   type?: PhotoSelectorType;
   callback(photo: ImageInfo): any;
+  image?: string | null;
 }
 
-export function PhotoSelector({ type, callback }: IPhotoSelectorProps) {
+export function PhotoSelector({ type, callback, image }: IPhotoSelectorProps) {
   const [photo, setPhoto] = useState<string | null>(null);
   const { isOpen, onOpen, onClose } = useDisclose();
 
@@ -62,8 +64,12 @@ export function PhotoSelector({ type, callback }: IPhotoSelectorProps) {
     <>
       <Box overflow='hidden' borderRadius={8} border={1} borderColor='gray.200'>
         <Touchable borderless onPress={onOpen}>
-          {photo ? (
-            <Image height={32} alt='project image' source={{ uri: photo }} />
+          {photo || image ? (
+            <Image
+              height={32}
+              alt='project image'
+              source={{ uri: photo || `${baseURL}/${image}` }}
+            />
           ) : (
             <HStack space={4} alignItems='center' p={2}>
               <Center

@@ -14,5 +14,5 @@ export default function useUser(id: number) {
     fetchUser();
   }, [fetchUser]);
 
-  return user;
+  return { user, setUser };
 }

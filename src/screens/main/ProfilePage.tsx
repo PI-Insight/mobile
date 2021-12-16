@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import {
   Center,
@@ -24,14 +30,21 @@ import useUser from "../../hooks/useUser";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { IUser, setUserImage, setUsername } from "../../api/user";
+import { IUser, setUserImage, setDisplayname } from "../../api/user";
 import { setToken } from "../../store/slices/token";
 import * as ImagePicker from "expo-image-picker";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 import { baseURL } from "../../api/base";
-import { Alert, TouchableNativeFeedback } from "react-native";
+import {
+  Alert,
+  TouchableNativeFeedback,
+  useWindowDimensions,
+} from "react-native";
 import { Touchable } from "../../components/Touchable";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useIsFocused } from "@react-navigation/native";
+import { setUser } from "../../store/slices/user";
+import { TabView, SceneMap } from "react-native-tab-view";
 
 interface IHeaderProps {
   isSameUser: boolean;
@@ -140,6 +153,7 @@ function Photo({ isSameUser, photoUrl }: IPhotoProps) {
                 w='100%'
                 h='100%'
                 alt='profile photo'
+                resizeMethod='resize'
               />
             ) : (
               <Center w='100%' h='100%'>
@@ -176,17 +190,25 @@ function Photo({ isSameUser, photoUrl }: IPhotoProps) {
 
 interface IUsernameProps {
   user: IUser;
+  setUser: (user: IUser) => void;
   isSameUser: boolean;
 }
-function Username({ isSameUser, user }: IUsernameProps) {
+function Username({ isSameUser, user, setUser }: IUsernameProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(user.username);
+  const [name, setName] = useState(user.displayname);
   const usernameRef = useRef<HTMLElement | null>(null);
+
   const toggleEditing = () => {
     setIsEditing(!isEditing);
-
     if (isEditing) {
-      setUsername(name);
+      setDisplayname(name)
+        .then(() => {
+          setUser({ ...user, displayname: name });
+        })
+        .catch((e) => {
+          setName(user.displayname);
+          Alert.alert("Erro", e.message);
+        });
     }
   };
 
@@ -225,18 +247,59 @@ function Username({ isSameUser, user }: IUsernameProps) {
     );
   }
 
-  return <Heading textAlign='center'>{user.username}</Heading>;
+  return <Heading textAlign='center'>{user.displayname}</Heading>;
+}
+
+interface ITabsProps {
+  user: IUser;
+}
+function Tabs({ user }: ITabsProps) {
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: "first", title: "Posts" },
+    { key: "second", title: "Fotos" },
+  ]);
+
+  const map = useMemo(
+    () =>
+      SceneMap({
+        first: () => (
+          <View flex={1} bg='#f00'>
+            <Heading>dsahduiahdiu</Heading>
+          </View>
+        ),
+        second: () => (
+          <View flex={1} bg='#0f0'>
+            <Heading>dsahduiahdiu</Heading>
+          </View>
+        ),
+      }),
+    [user]
+  );
+
+  return (
+    <TabView
+      navigationState={{ index, routes }}
+      renderScene={map}
+      onIndexChange={setIndex}
+      // renderTabBar={props}
+      initialLayout={{ width: layout.width }}
+    />
+  );
 }
 
 export default function Profile({
   navigation,
   route,
 }: NativeStackScreenProps<IRootParamList, "ProfilePage">) {
-  const user = useUser(route.params.userId);
+  const { user, setUser } = useUser(route.params.userId);
   const isSameUser = useSelector<RootState>(
     (state) => state.user.id === route.params.userId
   ) as boolean;
-  const theme = useTheme();
+  const isFocused = useIsFocused();
+
+  if (!isFocused) return null;
 
   if (!user) {
     return (
@@ -256,8 +319,9 @@ export default function Profile({
         />
       </VStack>
       <VStack bg='#fff' p={4}>
-        <Username user={user} isSameUser={isSameUser} />
+        <Username user={user} setUser={setUser} isSameUser={isSameUser} />
       </VStack>
+      <Tabs user={user} />
     </VStack>
   );
 }

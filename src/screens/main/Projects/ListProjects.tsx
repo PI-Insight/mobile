@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ScreenProps } from "../../../types";
 import {
   Box,
@@ -16,6 +16,9 @@ import {
   Pressable,
   Stack,
   CircularProgress,
+  Skeleton,
+  ScrollView,
+  View,
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import { getUserProjects } from "../../../api/user";
@@ -33,35 +36,61 @@ interface IProjectProps {
   project: IProject;
   navigation: any;
 }
-function Project({ project, navigation }: IProjectProps) {
-  return (
-    <Box borderRadius={4} overflow='hidden' p={2}>
-      <Touchable
-        borderless
-        onPress={() => navigation.navigate("ProjectSingle", { project })}
-      >
-        <VStack p={2} space={2}>
-          {!!project.image && (
-            <Image
-              source={{
-                uri: `${baseURL}/${project.image}`,
-              }}
-              alt='Alternate Text'
-              w='100%'
-              h={32}
-              rounded={4}
-              resizeMode='cover'
-            />
-          )}
-          <VStack space={1}>
-            <Heading size='lg'>{project.name}</Heading>
-            {!!project.description && <Text>{project.description}</Text>}
+const Project = React.memo(
+  ({ project, navigation }: IProjectProps) => {
+    return (
+      <Box borderRadius={4} overflow='hidden' p={2}>
+        <Touchable
+          borderless
+          onPress={() =>
+            navigation.navigate("ProjectSingle", { projectId: project.id })
+          }
+        >
+          <VStack p={2} space={2}>
+            {!!project.image && (
+              <Image
+                source={{
+                  uri: `${baseURL}/${project.image}`,
+                }}
+                alt='Alternate Text'
+                w='100%'
+                h={48}
+                rounded={4}
+                resizeMode='cover'
+                resizeMethod='resize'
+              />
+            )}
+            <VStack space={1}>
+              <Heading size='lg'>{project.name}</Heading>
+              {!!project.description && <Text>{project.description}</Text>}
+            </VStack>
           </VStack>
+        </Touchable>
+      </Box>
+    );
+  },
+  (prevProps, nextProps) => {
+    return prevProps.project.id === nextProps.project.id;
+  }
+);
+
+const ListSkeleton = React.memo(() => {
+  return (
+    <VStack space={2} safeArea p={4}>
+      <Skeleton w='100%' h={48} />
+      <VStack space={1}>
+        <Skeleton height={12} w='44%' variant='text' />
+        <VStack space={1}>
+          {Array(4)
+            .fill(0)
+            .map((_, i) => (
+              <Skeleton key={i} height={6} w='100%' variant='text' />
+            ))}
         </VStack>
-      </Touchable>
-    </Box>
+      </VStack>
+    </VStack>
   );
-}
+});
 
 export function ProjectsList({
   navigation,
@@ -72,12 +101,12 @@ export function ProjectsList({
   const id = useSelector<RootState>((state) => state.user.id) as number;
   const isFocused = useIsFocused();
 
-  const refreshProjects = () => {
+  const refreshProjects = useCallback(() => {
     setRefreshing(true);
     getUserProjects(id)
       .then(setProjects)
       .finally(() => setRefreshing(false));
-  };
+  }, []);
 
   useEffect(() => {
     if (route.params?.forceRefresh) refreshProjects();
@@ -87,27 +116,29 @@ export function ProjectsList({
     refreshProjects();
   }, []);
 
-  if (!isFocused)
-    return (
-      <Center safeArea flex={1}>
-        <CircularProgress size={16} value={100} isIndeterminate />
-      </Center>
-    );
+  if (!isFocused) return null;
+
+  if (!projects) {
+    return <ListSkeleton />;
+  }
 
   return (
-    <VStack mb={16} space={4} position='relative' bg='#fff' safeArea>
-      <Heading textAlign='center'>Projetos</Heading>
-      <FlatList
-        ItemSeparatorComponent={() => <Divider size={1} my={1} />}
-        refreshing={refreshing}
-        onRefresh={refreshProjects}
-        data={projects}
-        renderItem={({ item }) => (
-          <Project navigation={navigation} project={item} />
-        )}
-        keyExtractor={(item) => item.id.toString()}
-      />
-
+    <Box flex={1} safeArea>
+      <VStack flex={1} space={4}>
+        <Heading textAlign='center'>Projetos</Heading>
+        <View flex={1}>
+          <FlatList
+            refreshing={refreshing}
+            ItemSeparatorComponent={() => <Divider size={1} my={1} />}
+            onRefresh={refreshProjects}
+            data={projects}
+            renderItem={({ item }) => (
+              <Project navigation={navigation} project={item} />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </View>
+      </VStack>
       <Fab
         onPress={() =>
           navigation.navigate("ProjectCreate", { selectedUsers: [] })
@@ -117,6 +148,6 @@ export function ProjectsList({
         mb={12}
         icon={<Icon as={<Ionicons name='add-outline' />} />}
       />
-    </VStack>
+    </Box>
   );
 }

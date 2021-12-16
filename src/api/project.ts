@@ -35,3 +35,10 @@ export function createProject(info: ICreateProjectInfos) {
     return response.data;
   });
 }
+
+export async function getProject(id: number) {
+  return createAPICall<IProject>(async () => {
+    const response = await http.get<IProject>("/projects/" + id);
+    return response.data;
+  });
+}

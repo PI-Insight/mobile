@@ -16,10 +16,11 @@ export type ProjectStackNavigatorParams = {
     selectedUsers: IUser[];
   };
   ProjectSingle: {
-    project: IProject;
+    projectId: number;
   };
   UsersSelect: {
     selecteds?: IUser[];
+    goto: keyof ProjectStackNavigatorParams;
   };
 };
 
@@ -34,11 +35,6 @@ export default function ProjectsNavigator() {
         component={ProjectsList}
       />
       <Stack.Screen
-        name='ProjectCreate'
-        component={ProjectCreate}
-        options={{ title: "Criar projeto" }}
-      />
-      <Stack.Screen
         options={{ title: "" }}
         name='ProjectSingle'
         component={ProjectSingle}
@@ -47,6 +43,11 @@ export default function ProjectsNavigator() {
         options={{ title: "" }}
         name='UsersSelect'
         component={UsersSelect}
+      />
+      <Stack.Screen
+        name='ProjectCreate'
+        component={ProjectCreate}
+        options={{ title: "Criar projeto", headerShown: false }}
       />
     </Stack.Navigator>
   );

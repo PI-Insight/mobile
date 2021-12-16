@@ -4,6 +4,8 @@ import { IProject } from "./project";
 
 export interface IUser {
   id: number;
+  displayname: string;
+  descriptions: string;
   email: string;
   username: string;
   createdAt: string;
@@ -53,10 +55,10 @@ export async function setUserImage(uri: string) {
   });
 }
 
-export async function setUsername(username: string) {
+export async function setDisplayname(displayname: string) {
   return createAPICall<IUser>(async () => {
     const response = await http.patch<IUser>(`/users`, {
-      username,
+      displayname,
     });
     return response.data;
   });
