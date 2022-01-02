@@ -1,13 +1,12 @@
-import axios, { AxiosError } from "axios";
-import { Alert } from "react-native";
-import store from "../store";
+import axios, { AxiosError } from 'axios';
+import { store } from '~/store';
 
-export const baseURL = "http://10.0.2.2:3000";
+export const baseURL = 'http://10.0.2.2:3000';
 
 export const http = axios.create({
   baseURL,
   headers: {
-    Authorization: "Bearer " + store.getState().token.token || "",
+    Authorization: `Bearer ${store.getState().user.token}` || '',
   },
 });
 
@@ -18,18 +17,19 @@ export interface IErrorResponse {
 }
 
 export class ResponseError extends Error {
-  public readonly message: string = "";
-  public readonly status: string = "";
+  public readonly message: string = '';
+
+  public readonly status: string = '';
 
   constructor(error: Partial<IErrorResponse>) {
     super();
 
     if (Array.isArray(error.message)) {
-      error.message = error.message.join("\n");
+      error.message = error.message.join('\n');
     }
 
-    this.message = error.message || "";
-    this.status = (error.statusCode || "").toString();
+    this.message = error.message || '';
+    this.status = (error.statusCode || '').toString();
   }
 }
 
@@ -49,10 +49,10 @@ export async function createAPICall<T>(fn: Function): Promise<T> {
   }
 }
 
-export function createFileForm(uri: string, fileName = "file") {
+export function createFileForm(uri: string, fileName = 'file') {
   const formData = new FormData();
-  const type = "image/" + uri.split(".")[uri.split(".").length - 1];
-  const name = uri.split("/").pop();
+  const type = `image/${uri.split('.')[uri.split('.').length - 1]}`;
+  const name = uri.split('/').pop();
   formData.append(fileName, {
     uri,
     name,

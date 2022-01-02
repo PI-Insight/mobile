@@ -1,5 +1,5 @@
-import { createAPICall, createFileForm, http } from "./base";
-import { IUser } from "./user";
+import { createAPICall, createFileForm, http } from '~/api/base';
+import { IUser } from '~/api/user';
 
 export interface IProject {
   id: number;
@@ -21,13 +21,13 @@ interface ICreateProjectInfos {
 export function createProject(info: ICreateProjectInfos) {
   const { image, ...rest } = info;
   return createAPICall(async () => {
-    const response = await http.post<IProject>("/projects", rest);
+    const response = await http.post<IProject>('/projects', rest);
 
     if (image) {
       const form = createFileForm(image);
-      await http.post("/projects/" + response.data.id + "/image", form, {
+      await http.post(`/projects/${response.data.id}/image`, form, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       });
     }
@@ -38,7 +38,7 @@ export function createProject(info: ICreateProjectInfos) {
 
 export async function getProject(id: number) {
   return createAPICall<IProject>(async () => {
-    const response = await http.get<IProject>("/projects/" + id);
+    const response = await http.get<IProject>(`/projects/${id}`);
     return response.data;
   });
 }

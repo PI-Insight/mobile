@@ -1,7 +1,5 @@
-import * as React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { IUser } from "../../../api/user";
-import { UsersSelect } from "./SelectUsers";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as React from 'react';
 
 export type UsersStackNavigatorParams = {};
 

@@ -1,19 +1,24 @@
-import React from "react";
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { http } from '../api/base';
+import { RootState } from '../store';
+import AuthenticationNavigator, {
+  AuthenticationStackParamList,
+} from './authentication';
+import LoggedInNavigator, { MainStackParamList } from './main';
 
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
-
-import LoggedInNavigator from "./main";
-import AuthenticationNavigator from "./authentication";
-import { http } from "../api/base";
-
-export default function MainNavigator() {
-  const token = useSelector<RootState>((state) => state.token.token) as
-    | string
-    | undefined;
+export function Navigator() {
+  const token = useSelector<RootState, string>((state) => state.user.token);
 
   // Refresh auth token
-  http.defaults.headers["Authorization"] = `Bearer ${token}`;
+  http.defaults.headers.Authorization = `Bearer ${token}`;
 
   return token ? <LoggedInNavigator /> : <AuthenticationNavigator />;
 }
+
+export {
+  AuthenticationNavigator,
+  LoggedInNavigator,
+  AuthenticationStackParamList,
+  MainStackParamList,
+};

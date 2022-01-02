@@ -1,6 +1,7 @@
-import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
-import { createAPICall, createFileForm, http } from "./base";
-import { IProject } from "./project";
+import { store } from '~/store';
+import { createAPICall, createFileForm, http } from '~/api/base';
+import { IGroup } from '~/api/group';
+import { IProject } from '~/api/project';
 
 export interface IUser {
   id: number;
@@ -19,7 +20,7 @@ export interface ILoginResponse {
 }
 
 export async function paginateUsers(limit: number, offset: number) {
-  const response = await http.get<IUser[]>("/users", {
+  const response = await http.get<IUser[]>('/users', {
     params: {
       limit,
       offset,
@@ -36,19 +37,26 @@ export async function getUser(id: number): Promise<IUser> {
   });
 }
 
-export async function getUserProjects(id: number): Promise<IProject[]> {
+export async function getUserProjects(id: number = store.getState().user.id): Promise<IProject[]> {
   return createAPICall<IProject[]>(async () => {
     const response = await http.get<IProject[]>(`/users/${id}/projects`);
     return response.data;
   });
 }
 
+export async function getUserGroups(id: number = store.getState().user.id): Promise<IGroup[]> {
+  return createAPICall<IGroup[]>(async () => {
+    const response = await http.get<IGroup[]>(`/users/${id}/groups`);
+    return response.data;
+  });
+}
+
 export async function setUserImage(uri: string) {
   return createAPICall<IUser>(async () => {
-    const formData = createFileForm(uri, "profile-image");
-    const response = await http.patch<IUser>(`/users`, formData, {
+    const formData = createFileForm(uri, 'profile-image');
+    const response = await http.patch<IUser>('/users', formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
     });
     return response.data;
@@ -57,7 +65,7 @@ export async function setUserImage(uri: string) {
 
 export async function setDisplayname(displayname: string) {
   return createAPICall<IUser>(async () => {
-    const response = await http.patch<IUser>(`/users`, {
+    const response = await http.patch<IUser>('/users', {
       displayname,
     });
     return response.data;

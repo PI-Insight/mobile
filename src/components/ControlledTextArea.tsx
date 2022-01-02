@@ -1,10 +1,10 @@
-import React from "react";
-import { FormControl, IInputProps, Input, TextArea } from "native-base";
-import { Control, FieldValues, useController } from "react-hook-form";
+import { FormControl, IInputProps, TextArea } from 'native-base';
+import React from 'react';
+import { Control, useController } from 'react-hook-form';
 
 type NativeBaseInputProps = IInputProps & React.RefAttributes<unknown>;
 
-interface IControlledInputProps extends NativeBaseInputProps {
+export interface IControlledInputProps extends NativeBaseInputProps {
   name: string;
   control: Control<any, object>;
   label?: string;
@@ -12,7 +12,7 @@ interface IControlledInputProps extends NativeBaseInputProps {
   error?: string;
 }
 
-export default function ControlledTextArea({
+export function ControlledTextArea({
   control,
   name,
   label,
@@ -22,14 +22,14 @@ export default function ControlledTextArea({
 }: IControlledInputProps) {
   const { field } = useController({
     control,
-    defaultValue: "",
+    defaultValue: '',
     name,
   });
 
   return (
     <FormControl>
       {!!label && <FormControl.Label>{label}</FormControl.Label>}
-      <TextArea {...props} value={field.value} onChangeText={field.onChange} />
+      <TextArea bg="#F6F6F6" {...props} value={field.value} onChangeText={field.onChange} />
       {!!helper && <FormControl.HelperText>{helper}</FormControl.HelperText>}
       {!!error && <FormControl.ErrorMessage>{error}</FormControl.ErrorMessage>}
     </FormControl>

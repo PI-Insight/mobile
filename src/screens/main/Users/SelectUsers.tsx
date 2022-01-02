@@ -1,18 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { ScreenProps } from "../../../types";
-import { Box, Button, Center, Divider, Text, VStack } from "native-base";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { UsersStackNavigatorParams } from ".";
-import usePagination from "../../../hooks/usePagination";
-import { IUser, paginateUsers } from "../../../api/user";
-import { CardUsers } from "../../../components/CardUsers";
-import { FlatList } from "react-native";
-import { ProjectStackNavigatorParams } from "../Projects";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Box, Button, VStack } from 'native-base';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FlatList } from 'react-native';
+import { IUser, paginateUsers } from '../../../api/user';
+import { CardUsers } from '../../../components';
+import { ProjectStackNavigatorParams } from '../Projects';
 
 export function UsersSelect({
   navigation,
   route,
-}: NativeStackScreenProps<ProjectStackNavigatorParams, "UsersSelect">) {
+}: NativeStackScreenProps<ProjectStackNavigatorParams, 'UsersSelect'>) {
   const limit = 10;
   const { selecteds, goto } = route.params;
 
@@ -38,9 +35,8 @@ export function UsersSelect({
     setSelected((oldSelected) => {
       if (isSelected) {
         return [...oldSelected, user];
-      } else {
-        return oldSelected.filter((u) => u.id !== user.id);
       }
+      return oldSelected.filter((u) => u.id !== user.id);
     });
   }
 
@@ -62,7 +58,9 @@ export function UsersSelect({
         )}
       />
       <Button
-        mt='auto'
+        mt="auto"
+        rounded={32}
+        h={12}
         onPress={() => {
           navigation.navigate(goto, {
             selectedUsers: selected,

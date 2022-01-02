@@ -1,109 +1,88 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { ScreenProps } from "../../../types";
+import { Ionicons } from '@expo/vector-icons';
+import { useIsFocused } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   Box,
-  Center,
+  Divider,
   Fab,
   FlatList,
   Heading,
-  HStack,
   Icon,
-  Text,
-  VStack,
   Image,
-  Divider,
-  PresenceTransition,
-  Pressable,
-  Stack,
-  CircularProgress,
   Skeleton,
-  ScrollView,
+  Text,
   View,
-} from "native-base";
-import { Ionicons } from "@expo/vector-icons";
-import { getUserProjects } from "../../../api/user";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store";
-import { IProject } from "../../../api/project";
-import { useIsFocused } from "@react-navigation/native";
-import { NavigationScreenProp } from "react-navigation";
-import { Touchable } from "../../../components/Touchable";
-import { ProjectStackNavigatorParams } from ".";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { baseURL } from "../../../api/base";
+  VStack,
+} from 'native-base';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ProjectStackNavigatorParams } from '.';
+import { baseURL } from '../../../api/base';
+import { IProject } from '../../../api/project';
+import { getUserProjects } from '../../../api/user';
+import { Touchable } from '../../../components';
 
 interface IProjectProps {
   project: IProject;
   navigation: any;
 }
 const Project = React.memo(
-  ({ project, navigation }: IProjectProps) => {
-    return (
-      <Box borderRadius={4} overflow='hidden' p={2}>
-        <Touchable
-          borderless
-          onPress={() =>
-            navigation.navigate("ProjectSingle", { projectId: project.id })
-          }
-        >
-          <VStack p={2} space={2}>
-            {!!project.image && (
-              <Image
-                source={{
-                  uri: `${baseURL}/${project.image}`,
-                }}
-                alt='Alternate Text'
-                w='100%'
-                h={48}
-                rounded={4}
-                resizeMode='cover'
-                resizeMethod='resize'
-              />
-            )}
-            <VStack space={1}>
-              <Heading size='lg'>{project.name}</Heading>
-              {!!project.description && <Text>{project.description}</Text>}
-            </VStack>
+  ({ project, navigation }: IProjectProps) => (
+    <Box m={2} borderRadius={4} overflow="hidden">
+      <Touchable
+        onPress={() => navigation.navigate('ProjectSingle', { projectId: project.id })}
+      >
+        <VStack p={2} space={2}>
+          {!!project.image && (
+          <Image
+            source={{
+              uri: `${baseURL}/${project.image}`,
+            }}
+            alt="Alternate Text"
+            w="100%"
+            h={48}
+            rounded={4}
+            resizeMode="cover"
+            resizeMethod="resize"
+          />
+          )}
+          <VStack space={1}>
+            <Heading size="lg">{project.name}</Heading>
+            {!!project.description && <Text>{project.description}</Text>}
           </VStack>
-        </Touchable>
-      </Box>
-    );
-  },
-  (prevProps, nextProps) => {
-    return prevProps.project.id === nextProps.project.id;
-  }
+        </VStack>
+      </Touchable>
+    </Box>
+  ),
+  (prevProps, nextProps) => prevProps.project.id === nextProps.project.id,
 );
 
-const ListSkeleton = React.memo(() => {
-  return (
-    <VStack space={2} safeArea p={4}>
-      <Skeleton w='100%' h={48} />
+const ListSkeleton = React.memo(() => (
+  <VStack space={2} safeArea p={4}>
+    <Skeleton w="100%" h={48} />
+    <VStack space={1}>
+      <Skeleton height={12} w="44%"/>
       <VStack space={1}>
-        <Skeleton height={12} w='44%' variant='text' />
-        <VStack space={1}>
-          {Array(4)
-            .fill(0)
-            .map((_, i) => (
-              <Skeleton key={i} height={6} w='100%' variant='text' />
-            ))}
-        </VStack>
+        {Array(4)
+          .fill(0)
+          .map((_, i) => (
+            <Skeleton key={i} height={6} w="100%"/>
+          ))}
       </VStack>
     </VStack>
-  );
-});
+  </VStack>
+));
 
 export function ProjectsList({
   navigation,
   route,
-}: NativeStackScreenProps<ProjectStackNavigatorParams, "ProjectsList">) {
-  const [projects, setProjects] = React.useState<any[]>([]);
+}: NativeStackScreenProps<ProjectStackNavigatorParams, 'ProjectsList'>) {
+  const [projects, setProjects] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-  const id = useSelector<RootState>((state) => state.user.id) as number;
   const isFocused = useIsFocused();
 
   const refreshProjects = useCallback(() => {
     setRefreshing(true);
-    getUserProjects(id)
+    getUserProjects()
       .then(setProjects)
       .finally(() => setRefreshing(false));
   }, []);
@@ -116,20 +95,20 @@ export function ProjectsList({
     refreshProjects();
   }, []);
 
-  if (!isFocused) return null;
-
-  if (!projects) {
+  if (!projects.some(i => i)) {
     return <ListSkeleton />;
   }
 
   return (
     <Box flex={1} safeArea>
       <VStack flex={1} space={4}>
-        <Heading textAlign='center'>Projetos</Heading>
+        <Heading textAlign="center">Projetos</Heading>
         <View flex={1}>
           <FlatList
             refreshing={refreshing}
-            ItemSeparatorComponent={() => <Divider size={1} my={1} />}
+            ItemSeparatorComponent={() => (
+              <Divider mx="auto" w="80%" my={1} />
+            )}
             onRefresh={refreshProjects}
             data={projects}
             renderItem={({ item }) => (
@@ -139,15 +118,15 @@ export function ProjectsList({
           />
         </View>
       </VStack>
-      <Fab
-        onPress={() =>
-          navigation.navigate("ProjectCreate", { selectedUsers: [] })
-        }
-        justifyContent='center'
-        alignItems='center'
-        mb={12}
-        icon={<Icon as={<Ionicons name='add-outline' />} />}
-      />
+      {isFocused && (
+        <Fab
+          onPress={() => navigation.navigate('ProjectCreate', { selectedUsers: [] })}
+          justifyContent="center"
+          alignItems="center"
+          mb={12}
+          icon={<Icon as={<Ionicons name="add-outline" />} />}
+        />
+      )}
     </Box>
   );
 }

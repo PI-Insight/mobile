@@ -1,12 +1,12 @@
-import { useTheme } from "native-base";
-import React from "react";
+import { Box, useTheme } from 'native-base';
+import React from 'react';
 import {
   Platform,
   TouchableNativeFeedback,
   TouchableNativeFeedbackProps,
   TouchableOpacity,
   TouchableOpacityProps,
-} from "react-native";
+} from 'react-native';
 
 type TouchableProps = (TouchableOpacityProps & TouchableNativeFeedbackProps) & {
   children: JSX.Element[] | JSX.Element | React.ReactNode;
@@ -24,7 +24,7 @@ export function Touchable({
   rippleColor,
   ...props
 }: TouchableProps) {
-  if (Platform.OS === "ios") {
+  if (Platform.OS === 'ios') {
     return (
       <TouchableOpacity {...props} {...ios}>
         {children}
@@ -32,13 +32,13 @@ export function Touchable({
     );
   }
 
-  const color = useTheme().colors.gray["200"];
+  const color = useTheme().colors.gray['200'];
 
   return (
     <TouchableNativeFeedback
       background={TouchableNativeFeedback.Ripple(
         rippleColor || color,
-        !!borderless
+        !!borderless,
       )}
       {...props}
       {...android}

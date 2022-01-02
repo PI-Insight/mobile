@@ -1,20 +1,18 @@
-import React from "react";
-import * as Font from "expo-font";
-import Navigator from "./src/navigation";
-import { NativeBaseProvider } from "native-base";
-import { Provider } from "react-redux";
-import { StatusBar } from "expo-status-bar";
-
-import theme from "./theme";
-import store from "./src/store";
-
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import Font from 'expo-font';
+import { StatusBar } from 'expo-status-bar';
+import { NativeBaseProvider } from 'native-base';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { Navigator } from '~/navigation';
+import { store } from '~/store';
+import theme from './theme';
 
 const navigationTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: "#fff",
+    background: '#fff',
   },
 };
 

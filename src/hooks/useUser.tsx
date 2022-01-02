@@ -1,6 +1,5 @@
-import React from "react";
-import { Alert } from "react-native";
-import { getUser, IUser } from "../api/user";
+import React from 'react';
+import { getUser, IUser } from '../api/user';
 
 export default function useUser(id: number) {
   const [user, setUser] = React.useState<IUser | null>(null);

@@ -1,12 +1,10 @@
-import * as React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { ProjectsList } from "./ListProjects";
-import { ProjectCreate } from "./CreateProject";
-import { ProjectSingle } from "./SingleProject";
-import { IProject } from "../../../api/project";
-import { SelectorUsers } from "../../../components/UsersSelector";
-import { UsersSelect } from "../Users/SelectUsers";
-import { IUser } from "../../../api/user";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as React from 'react';
+import { IUser } from '../../../api/user';
+import { UsersSelect } from '../Users/SelectUsers';
+import { ProjectCreate } from './CreateProject';
+import { ProjectsList } from './ListProjects';
+import { ProjectSingle } from './SingleProject';
 
 export type ProjectStackNavigatorParams = {
   ProjectsList: {
@@ -31,23 +29,23 @@ export default function ProjectsNavigator() {
     <Stack.Navigator>
       <Stack.Screen
         options={{ headerShown: false }}
-        name='ProjectsList'
+        name="ProjectsList"
         component={ProjectsList}
       />
       <Stack.Screen
-        options={{ title: "" }}
-        name='ProjectSingle'
+        options={{ title: '' }}
+        name="ProjectSingle"
         component={ProjectSingle}
       />
       <Stack.Screen
-        options={{ title: "" }}
-        name='UsersSelect'
+        options={{ title: '' }}
+        name="UsersSelect"
         component={UsersSelect}
       />
       <Stack.Screen
-        name='ProjectCreate'
+        name="ProjectCreate"
         component={ProjectCreate}
-        options={{ title: "Criar projeto", headerShown: false }}
+        options={{ title: 'Criar projeto', headerShown: false }}
       />
     </Stack.Navigator>
   );

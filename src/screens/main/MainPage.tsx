@@ -1,10 +1,9 @@
-import React from "react";
-import { ScreenProps } from "../../types";
-import { Center, Text } from "native-base";
+import { Center, Text } from 'native-base';
+import React from 'react';
 
-export default function MainPage({ navigation }: ScreenProps) {
+export default function MainPage({ navigation }: any) {
   return (
-    <Center p={8} bg='white' safeArea flex={1}>
+    <Center p={8} bg="white" safeArea flex={1}>
       <Text>Principal</Text>
     </Center>
   );

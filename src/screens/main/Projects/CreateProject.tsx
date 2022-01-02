@@ -1,27 +1,18 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Box, Button, VStack } from 'native-base';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Alert } from 'react-native';
+import { ProjectStackNavigatorParams } from '.';
+import { createProject } from '../../../api/project';
+import { IUser } from '../../../api/user';
 import {
-  Box,
-  Button,
-  FormControl,
-  Input,
-  ScrollView,
-  Stack,
-  TextArea,
-  VStack,
-} from "native-base";
-import React, { useCallback, useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { View, Text, Alert } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { NavigationScreenProp } from "react-navigation";
-import { ProjectStackNavigatorParams } from ".";
-import { createProject, IProject } from "../../../api/project";
-import { IUser } from "../../../api/user";
-import { ControlledInput } from "../../../components";
-import ControlledTextArea from "../../../components/ControlledTextArea";
-import { PhotoSelector } from "../../../components/PhotoSelector";
-import { SelectorUsers } from "../../../components/UsersSelector";
-import UsersNavigator from "../Users";
+  ControlledInput,
+  ControlledTextArea,
+  PhotoSelector,
+  UsersSelector,
+} from '../../../components';
+
 interface IFormValues {
   name: string;
   description: string;
@@ -32,7 +23,7 @@ interface IFormValues {
 export function ProjectCreate({
   navigation,
   route,
-}: NativeStackScreenProps<ProjectStackNavigatorParams, "ProjectCreate">) {
+}: NativeStackScreenProps<ProjectStackNavigatorParams, 'ProjectCreate'>) {
   const { control, handleSubmit, formState } = useForm<IFormValues>();
   const [members, setMembers] = useState<IUser[]>([]);
   const [image, setImage] = useState<string | null>(null);
@@ -48,53 +39,48 @@ export function ProjectCreate({
   }
 
   const onSubmit = useCallback(
-    async (values) => {
-      return await createProject({
-        ...values,
-        members: members.map((u) => u.id),
-        image,
-      })
-        .then((project) =>
-          navigation.replace("ProjectsList", { forceRefresh: false })
-        )
-        .catch((e) => Alert.alert("Error", e.message));
-    },
-    [members, formState]
+    async (values) => await createProject({
+      ...values,
+      members: members.map((u) => u.id),
+      image,
+    })
+      .then(() => navigation.replace('ProjectsList', { forceRefresh: false }))
+      .catch((e) => Alert.alert('Error', e.message)),
+    [members, formState],
   );
 
   return (
     <Box safeArea flex={1}>
-      <VStack justifyContent='space-between' p={4} flex={1}>
+      <VStack justifyContent="space-between" p={4} flex={1}>
         <VStack space={4}>
           <ControlledInput
-            name='name'
+            name="name"
             control={control}
-            placeholder='A nice name to your project'
-            label='Name'
+            placeholder="A nice name to your project"
+            label="Name"
           />
           <ControlledTextArea
-            label='Description'
-            name='description'
+            label="Description"
+            name="description"
             control={control}
           />
-          <SelectorUsers
+          <UsersSelector
             users={members}
             onCardPress={removeMember}
-            onPress={() =>
-              navigation.navigate("UsersSelect", {
-                selecteds: members,
-                goto: "ProjectCreate",
-              })
-            }
+            onPress={() => navigation.navigate('UsersSelect', {
+              selecteds: members,
+              goto: 'ProjectCreate',
+            })}
           />
           <PhotoSelector callback={(image) => setImage(image.uri)} />
         </VStack>
 
         <Button
+          rounded={32} h={12}
           isLoading={formState.isSubmitting}
           onPress={handleSubmit(onSubmit)}
         >
-          {formState.isSubmitting ? "" : "Criar"}
+          {formState.isSubmitting ? '' : 'Criar'}
         </Button>
       </VStack>
     </Box>

@@ -1,21 +1,23 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface IUSerSliceState {
   isLoggedIn: boolean;
   id: number;
   username: string;
   email: string;
+  token: string;
 }
 
 const initialState: IUSerSliceState = {
   isLoggedIn: false,
   id: -1,
-  username: "",
-  email: "",
+  username: '',
+  email: '',
+  token: '',
 };
 
 const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     setUser(state, action: PayloadAction<Partial<IUSerSliceState>>) {

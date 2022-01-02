@@ -1,33 +1,35 @@
-import { extendTheme } from "native-base";
-import chroma from "chroma-js";
-
-interface IShades {
-  [key: string | number]: string;
-}
-function createShades(middleColor: string) {
-  const middle = chroma(middleColor);
-  const shadeStorage: IShades = {};
-
-  for (let i = 50; i <= 900; i += i === 50 ? 50 : 100) {
-    shadeStorage[i] = middle.darken((i - 500) / 200).hex();
-  }
-
-  return shadeStorage;
-}
+import { extendTheme } from 'native-base';
 
 const theme = extendTheme({
   colors: {
-    primary: createShades("#DF2266"),
+    primary: {
+      100: '#ff96c4',
+      200: '#ff7cab',
+      300: '#ff6193',
+      400: '#fb447c',
+      50: '#ffa3d0',
+      500: '#df2266',
+      600: '#c30051',
+      700: '#a7003c',
+      800: '#8b0029',
+      900: '#700017',
+    },
   },
-  components: {
-    // Button: {
-    //   baseStyle: {
-    //     h: '48px',
-    //     rounded: 24,
-    //     w: '100%',
-    //     bg: 'primary.500'
-    //   }
-    // }
+  fontSizes: {
+    '2xs': 12,
+    xs: 14,
+    sm: 16,
+    md: 18,
+    lg: 20,
+    xl: 22,
+    '2xl': 24,
+    '3xl': 30,
+    '4xl': 36,
+    '5xl': 48,
+    '6xl': 60,
+    '7xl': 72,
+    '8xl': 96,
+    '9xl': 128,
   },
 });
 
