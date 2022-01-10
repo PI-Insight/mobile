@@ -1,12 +1,9 @@
-import {
-  Box, Heading, HStack, Stack, Text,
-} from 'native-base';
+import { Box, Heading, HStack, Stack, Text } from 'native-base';
 import React, { useCallback } from 'react';
 import { Alert } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch } from 'react-redux';
-import { Touchable } from '../../../../components';
-import { setUser } from '../../../../store/slices/user';
+import { Touchable } from '~/components';
+import { setUser } from '~/store/slices/user';
 
 interface IHeaderProps {
   isSameUser: boolean;
@@ -31,7 +28,7 @@ export function Header({ isSameUser }: IHeaderProps) {
       ],
       {
         cancelable: true,
-      },
+      }
     );
   }, [isSameUser]);
 

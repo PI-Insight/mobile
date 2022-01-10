@@ -1,15 +1,13 @@
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types';
-import {
-  Box, Center, Image, useDisclose,
-} from 'native-base';
-import React, { useCallback } from 'react';
+import { Box, Center, Image, useDisclose } from 'native-base';
+import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch } from 'react-redux';
-import { baseURL } from '../../../../api/base';
-import { setUserImage } from '../../../../api/user';
-import { SimplePhotoSelector } from '../../../../components';
-import { setUser } from '../../../../store/slices/user';
+import { baseURL } from '~/api/base';
+import { setUserImage } from '~/api/user';
+import { SimplePhotoSelector } from '~/components';
+import { setUser } from '~/store/slices/user';
 
 interface IPhotoProps {
   isSameUser: boolean;
@@ -19,7 +17,7 @@ export function Photo({ isSameUser, photoUrl }: IPhotoProps) {
   const [photo, setPhoto] = React.useState<null | string>(photoUrl);
   const { isOpen, onOpen, onClose } = useDisclose();
 
-  const uploadImage = async (photo: ImageInfo) => {
+  const uploadImage = (photo: ImageInfo) => {
     setUserImage(photo.uri).then((res) => {
       setPhoto(res.image);
     });

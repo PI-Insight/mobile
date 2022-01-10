@@ -15,22 +15,6 @@ const theme = extendTheme({
       900: '#700017',
     },
   },
-  fontSizes: {
-    '2xs': 12,
-    xs: 14,
-    sm: 16,
-    md: 18,
-    lg: 20,
-    xl: 22,
-    '2xl': 24,
-    '3xl': 30,
-    '4xl': 36,
-    '5xl': 48,
-    '6xl': 60,
-    '7xl': 72,
-    '8xl': 96,
-    '9xl': 128,
-  },
 });
 
 export default theme;

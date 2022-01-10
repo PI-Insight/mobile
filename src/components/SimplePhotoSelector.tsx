@@ -1,36 +1,26 @@
-import ImagePicker from 'expo-image-picker';
-import { ImageInfo, ImagePickerResult } from 'expo-image-picker/build/ImagePicker.types';
+import * as ImagePicker from 'expo-image-picker';
+import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types';
 import { Actionsheet, Box, Text } from 'native-base';
 import React, { useCallback } from 'react';
 
-export enum PhotoSelectorType {
-  CAMERA = 'PHOTO_SELECTOR_TYPE_CAMERA',
-  GALLERY = 'PHOTO_SELECTOR_TYPE_GALLERY',
-}
-
 interface ISimplePhotoSelectorProps {
-  type?: PhotoSelectorType;
   callback(photo: ImageInfo): any;
   onCancel(): any;
   isOpen: boolean;
 }
 
-export function SimplePhotoSelector({
-  callback,
-  onCancel,
-  isOpen,
-}: ISimplePhotoSelectorProps) {
+export function SimplePhotoSelector({ callback, onCancel, isOpen }: ISimplePhotoSelectorProps) {
   const takePhotoFromCamera = useCallback(async () => {
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 3],
     });
 
-    if (result.cancelled) {
-      return;
+    if (result.cancelled === true) {
+      return onCancel();
     }
 
-    callback(result as ImageInfo);
+    callback(result);
   }, []);
 
   const takePhotoFromGallery = useCallback(async () => {
@@ -39,11 +29,11 @@ export function SimplePhotoSelector({
       aspect: [4, 3],
     });
 
-    if (result.cancelled) {
-      return;
+    if (result.cancelled === true) {
+      return onCancel();
     }
 
-    callback(result as ImageInfo);
+    callback(result);
   }, []);
 
   return (
@@ -60,12 +50,8 @@ export function SimplePhotoSelector({
             Select an option
           </Text>
         </Box>
-        <Actionsheet.Item onPress={takePhotoFromGallery}>
-          Gallery
-        </Actionsheet.Item>
-        <Actionsheet.Item onPress={takePhotoFromCamera}>
-          Camera
-        </Actionsheet.Item>
+        <Actionsheet.Item onPress={takePhotoFromGallery}>Gallery</Actionsheet.Item>
+        <Actionsheet.Item onPress={takePhotoFromCamera}>Camera</Actionsheet.Item>
       </Actionsheet.Content>
     </Actionsheet>
   );

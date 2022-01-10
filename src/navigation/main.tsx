@@ -1,23 +1,21 @@
-import theme from '../../theme';
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-// Screens
 import { ParamListBase, RouteProp } from '@react-navigation/native';
-import * as React from 'react';
-// Icons
+import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import MainPage from '../screens/main/MainPage';
-import { ProfileNavigator } from '../screens/main/Profile';
-import ProjectsNavigator from '../screens/main/Projects';
-import { TeamsNavigator } from '../screens/main/Teams';
+import theme from '../../theme';
+import MainPage from '../screens/main/Index';
+import { ProfileNavigator } from '../screens/main/profile';
+import ProjectsNavigator from '../screens/main/projects';
+import { TeamsNavigator } from '../screens/main/teams';
 
 const icons: any = {
-  MainPage: (active: boolean) => (active ? 'home' : 'home-outline'),
-  ProjectsPage: (active: boolean) => (active ? 'book' : 'book-outline'),
-  TeamsPage: (active: boolean) => (active ? 'people' : 'people-outline'),
-  ProfilePage: (active: boolean) => (active ? 'person' : 'person-outline'),
+  index: (active: boolean) => (active ? 'home' : 'home-outline'),
+  projects: (active: boolean) => (active ? 'book' : 'book-outline'),
+  groups: (active: boolean) => (active ? 'people' : 'people-outline'),
+  profile: (active: boolean) => (active ? 'person' : 'person-outline'),
 };
 
 interface NavigatorParams {
@@ -30,13 +28,6 @@ interface ITabIconProps {
   color: string;
   size: number;
 }
-
-export type MainStackParamList = {
-  MainPage: undefined;
-  ProfilePage: undefined;
-  ProjectsPage: undefined;
-  TeamsPage: undefined;
-};
 
 function createConfig(params: NavigatorParams): BottomTabNavigationOptions {
   const { route } = params;
@@ -57,6 +48,13 @@ function createConfig(params: NavigatorParams): BottomTabNavigationOptions {
   };
 }
 
+export type MainStackParamList = {
+  index: undefined;
+  projects: undefined;
+  groups: undefined;
+  profile: undefined;
+};
+
 const Tab = createBottomTabNavigator<MainStackParamList>();
 
 export default function LoggedInNavigator() {
@@ -64,22 +62,22 @@ export default function LoggedInNavigator() {
     <Tab.Navigator screenOptions={createConfig}>
       <Tab.Screen
         options={{ headerShown: false, title: 'Início' }}
-        name="MainPage"
+        name="index"
         component={MainPage}
       />
       <Tab.Screen
         options={{ headerShown: false, title: 'Seus projetos' }}
-        name="ProjectsPage"
+        name="projects"
         component={ProjectsNavigator}
       />
       <Tab.Screen
         options={{ headerShown: false, title: 'Seus times' }}
-        name="TeamsPage"
+        name="groups"
         component={TeamsNavigator}
       />
       <Tab.Screen
         options={{ headerShown: false, title: 'Seu perfil' }}
-        name="ProfilePage"
+        name="profile"
         component={ProfileNavigator}
       />
     </Tab.Navigator>

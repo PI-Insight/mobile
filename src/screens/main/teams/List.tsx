@@ -16,9 +16,9 @@ import {
 } from 'native-base';
 import React, { useCallback, useEffect, useState } from 'react';
 import { TeamsStackNavigatorParams } from '.';
-import { IGroup } from '../../../api/group';
-import { getUserGroups } from '../../../api/user';
-import { Touchable } from '../../../components';
+import { IGroup } from '~/api/group';
+import { getUserGroups } from '~/api/user';
+import { Touchable } from '~/components';
 
 interface IProjectProps {
   group: IGroup;
@@ -37,7 +37,7 @@ const Project = React.memo(
       </Touchable>
     </Box>
   ),
-  (prevProps, nextProps) => prevProps.group.id === nextProps.group.id,
+  (prevProps, nextProps) => prevProps.group.id === nextProps.group.id
 );
 
 const ListSkeleton = React.memo(() => (
@@ -90,14 +90,10 @@ export function TeamsPage({
         <View flex={1}>
           <FlatList
             refreshing={refreshing}
-            ItemSeparatorComponent={() => (
-              <Divider w="80%" mx="auto" my={1} />
-            )}
+            ItemSeparatorComponent={() => <Divider w="80%" mx="auto" my={1} />}
             onRefresh={refreshGroups}
             data={groups}
-            renderItem={({ item }) => (
-              <Project navigation={navigation} group={item} />
-            )}
+            renderItem={({ item }) => <Project navigation={navigation} group={item} />}
             keyExtractor={(item) => item.id.toString()}
           />
         </View>

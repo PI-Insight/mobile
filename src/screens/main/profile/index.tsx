@@ -1,10 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { store } from '../../../store';
-import { ProfilePage } from './ProfilePage';
+import { store } from '~/store';
+import { Profile } from './Profile';
 
 export type ProfileStackNavigatorParams = {
-  ProfileIndex: {
+  'profile.index': {
     userId: number;
   };
 };
@@ -16,8 +16,8 @@ export function ProfileNavigator() {
     <Stack.Navigator>
       <Stack.Screen
         options={{ headerShown: false }}
-        name="ProfileIndex"
-        component={ProfilePage}
+        name="profile.index"
+        component={Profile}
         initialParams={{ userId: store.getState().user.id }}
       />
     </Stack.Navigator>

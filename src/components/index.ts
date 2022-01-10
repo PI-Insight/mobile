@@ -1,4 +1,3 @@
-import { CardUsers } from './CardUsers';
 import { ControlledInput } from './ControlledInput';
 import { ControlledTextArea } from './ControlledTextArea';
 import { Logo } from './Logo';
@@ -8,7 +7,6 @@ import { UsersSelector } from './UsersSelector';
 import { SimplePhotoSelector } from './SimplePhotoSelector';
 
 export {
-  CardUsers,
   ControlledInput,
   ControlledTextArea,
   Logo,

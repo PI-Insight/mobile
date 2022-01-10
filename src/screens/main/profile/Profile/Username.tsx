@@ -1,11 +1,9 @@
-import {
-  Box, Heading, HStack, Input,
-} from 'native-base';
+import { Box, Heading, HStack, Input } from 'native-base';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { IUser, setDisplayname } from '../../../../api/user';
-import { Touchable } from '../../../../components';
+import { IUser, setDisplayname } from '~/api/user';
+import { Touchable } from '~/components';
 
 interface IUsernameProps {
   user: IUser;

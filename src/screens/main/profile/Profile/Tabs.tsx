@@ -2,7 +2,7 @@ import { Heading, View } from 'native-base';
 import React, { useMemo, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { SceneMap, TabView } from 'react-native-tab-view';
-import { IUser } from '../../../../api/user';
+import { IUser } from '~/api/user';
 
 interface ITabsProps {
   user: IUser;
@@ -16,19 +16,20 @@ export function Tabs({ user }: ITabsProps) {
   ]);
 
   const map = useMemo(
-    () => SceneMap({
-      first: () => (
-        <View flex={1} bg="#f00">
-          <Heading>dsahduiahdiu</Heading>
-        </View>
-      ),
-      second: () => (
-        <View flex={1} bg="#0f0">
-          <Heading>dsahduiahdiu</Heading>
-        </View>
-      ),
-    }),
-    [user],
+    () =>
+      SceneMap({
+        first: () => (
+          <View flex={1} bg="#f00">
+            <Heading>dsahduiahdiu</Heading>
+          </View>
+        ),
+        second: () => (
+          <View flex={1} bg="#0f0">
+            <Heading>dsahduiahdiu</Heading>
+          </View>
+        ),
+      }),
+    [user]
   );
 
   return (

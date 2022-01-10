@@ -3,15 +3,10 @@ import { Box, Button, VStack } from 'native-base';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Alert } from 'react-native';
+import { createProject } from '~/api/project';
+import { IUser } from '~/api/user';
+import { ControlledInput, ControlledTextArea, PhotoSelector, UsersSelector } from '~/components';
 import { ProjectStackNavigatorParams } from '.';
-import { createProject } from '../../../api/project';
-import { IUser } from '../../../api/user';
-import {
-  ControlledInput,
-  ControlledTextArea,
-  PhotoSelector,
-  UsersSelector,
-} from '../../../components';
 
 interface IFormValues {
   name: string;
@@ -20,10 +15,8 @@ interface IFormValues {
   image?: string;
 }
 
-export function ProjectCreate({
-  navigation,
-  route,
-}: NativeStackScreenProps<ProjectStackNavigatorParams, 'ProjectCreate'>) {
+type ProjectCreateprops = NativeStackScreenProps<ProjectStackNavigatorParams, 'project.create'>;
+export function ProjectCreate({ navigation, route }: ProjectCreateprops) {
   const { control, handleSubmit, formState } = useForm<IFormValues>();
   const [members, setMembers] = useState<IUser[]>([]);
   const [image, setImage] = useState<string | null>(null);
@@ -39,14 +32,15 @@ export function ProjectCreate({
   }
 
   const onSubmit = useCallback(
-    async (values) => await createProject({
-      ...values,
-      members: members.map((u) => u.id),
-      image,
-    })
-      .then(() => navigation.replace('ProjectsList', { forceRefresh: false }))
-      .catch((e) => Alert.alert('Error', e.message)),
-    [members, formState],
+    async (values) =>
+      await createProject({
+        ...values,
+        members: members.map((u) => u.id),
+        image,
+      })
+        .then(() => navigation.replace('project.list', { forceRefresh: true }))
+        .catch((e) => Alert.alert('Error', e.message)),
+    [members, formState]
   );
 
   return (
@@ -59,24 +53,26 @@ export function ProjectCreate({
             placeholder="A nice name to your project"
             label="Name"
           />
-          <ControlledTextArea
-            label="Description"
-            name="description"
-            control={control}
-          />
+          <ControlledTextArea label="Description" name="description" control={control} />
           <UsersSelector
             users={members}
             onCardPress={removeMember}
-            onPress={() => navigation.navigate('UsersSelect', {
-              selecteds: members,
-              goto: 'ProjectCreate',
-            })}
+            onPress={() =>
+              navigation.navigate('users.navigator', {
+                screen: 'users.select',
+                params: {
+                  selectedUsers: members,
+                  goto: 'project.create',
+                },
+              })
+            }
           />
           <PhotoSelector callback={(image) => setImage(image.uri)} />
         </VStack>
 
         <Button
-          rounded={32} h={12}
+          rounded={32}
+          h={12}
           isLoading={formState.isSubmitting}
           onPress={handleSubmit(onSubmit)}
         >
