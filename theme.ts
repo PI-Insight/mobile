@@ -1,33 +1,20 @@
+import { extendTheme } from 'native-base';
 
-const theme = {
+const theme = extendTheme({
   colors: {
-    text: {
-      primary: '#000000',
-      secondary: '#999999',
+    primary: {
+      100: '#ff96c4',
+      200: '#ff7cab',
+      300: '#ff6193',
+      400: '#fb447c',
+      50: '#ffa3d0',
+      500: '#df2266',
+      600: '#c30051',
+      700: '#a7003c',
+      800: '#8b0029',
+      900: '#700017',
     },
-    background: {
-      primary: '#FFFFFF'
-    }
   },
-  Input: {
-    inputStyle: {
-      width: '100%',
-      borderWidth: 1,
-      borderColor: '#E8E8E8',
-      backgroundColor: '#F6F6F6',
-      borderRadius: 8,
-      padding: 12,
-    },
-    containerStyle: {
-      width: '100%',
-      paddingHorizontal: 0
-    },
-    inputContainerStyle: {
-      width: '100%',
-      borderBottomWidth: 0,
-    },
-
-  }
-};
+});
 
 export default theme;
