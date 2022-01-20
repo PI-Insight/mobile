@@ -1,4 +1,4 @@
-import { VStack, Skeleton } from 'native-base';
+import { Skeleton, VStack } from 'native-base';
 import React, { memo } from 'react';
 
 export const ProjectListSkeleton = memo(() => (

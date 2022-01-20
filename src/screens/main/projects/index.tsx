@@ -1,3 +1,4 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { IUser } from '~/api/user';
@@ -16,10 +17,7 @@ export type ProjectStackNavigatorParams = {
   'project.single': {
     projectId: number;
   };
-  'users.navigator': {
-    screen: keyof UsersStackNavigatorParams;
-    params: UsersStackNavigatorParams[keyof UsersStackNavigatorParams];
-  };
+  'users.navigator': NavigatorScreenParams<UsersStackNavigatorParams>;
 };
 
 const Stack = createNativeStackNavigator<ProjectStackNavigatorParams>();

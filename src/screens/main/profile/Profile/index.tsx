@@ -1,24 +1,34 @@
+import { useIsFocused } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Center, Spinner, VStack } from 'native-base';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { ProfileStackNavigatorParams } from '..';
 import useUser from '~/hooks/useUser';
 import { RootState } from '~/store';
-import { Header } from './Header';
-import { Photo } from './Photo';
-import { Tabs } from './Tabs';
-import { Username } from './Username';
+import { ProfileStackNavigatorParams } from '..';
+import { Header } from './components/Header';
+import { Photo } from './components/Photo';
+import { Tabs } from './components/Tabs';
+import { Username } from './components/Username';
 
 export function Profile({
-  route,
+  route: {
+    params: { userId },
+  },
+  navigation: { setParams },
 }: NativeStackScreenProps<ProfileStackNavigatorParams, 'profile.index'>) {
-  const { user, setUser } = useUser(route.params.userId);
-  const isSameUser = useSelector<RootState, boolean>(
-    (state) => state.user.id === route.params.userId
-  );
+  const { user } = useUser(userId);
+  const isFocused = useIsFocused();
+  const loggedInUserid = useSelector((state: RootState) => state.user.id);
+  const isSameUser = useSelector<RootState, boolean>((state) => state.user.id === userId);
 
-  if (!user) {
+  useEffect(() => {
+    if (!isFocused && user.id !== loggedInUserid) {
+      setParams({ userId: loggedInUserid });
+    }
+  }, [isFocused]);
+
+  if (!user || user.id !== userId) {
     return (
       <Center safeArea flex={1}>
         <Spinner accessibilityLabel="Loading profile" />
@@ -33,7 +43,7 @@ export function Profile({
         <Photo photoUrl={user.image} isSameUser={isSameUser} />
       </VStack>
       <VStack bg="#fff" p={4}>
-        <Username user={user} setUser={setUser} isSameUser={isSameUser} />
+        <Username user={user} isSameUser={isSameUser} />
       </VStack>
       <Tabs user={user} />
     </VStack>

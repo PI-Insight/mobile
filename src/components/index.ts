@@ -5,6 +5,8 @@ import { PhotoSelector } from './PhotoSelector';
 import { Touchable } from './Touchable';
 import { UsersSelector } from './UsersSelector';
 import { SimplePhotoSelector } from './SimplePhotoSelector';
+import { UserCard } from './UserCard';
+import { UserPhoto } from './UserPhoto';
 
 export {
   ControlledInput,
@@ -14,4 +16,6 @@ export {
   UsersSelector,
   Touchable,
   SimplePhotoSelector,
+  UserCard,
+  UserPhoto,
 };

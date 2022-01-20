@@ -1,23 +1,17 @@
-import {
-  Box, Center, Heading, HStack, Image,
-} from 'native-base';
+import { Box, Center, Heading, HStack } from 'native-base';
 import React from 'react';
 import { FlatList } from 'react-native';
 import Ionicions from 'react-native-vector-icons/Ionicons';
-import { baseURL } from '../api/base';
 import { IUser } from '../api/user';
 import { Touchable } from './Touchable';
+import { UserPhoto } from './UserPhoto';
 
 interface ISelectorUsersProps {
   onPress(): void;
   onCardPress(user: IUser): void;
   users: IUser[];
 }
-export function UsersSelector({
-  onPress,
-  onCardPress,
-  users,
-}: ISelectorUsersProps) {
+export function UsersSelector({ onPress, onCardPress, users }: ISelectorUsersProps) {
   return (
     <Box bg="#F6F6F6" overflow="hidden" borderRadius={8} borderWidth={1} borderColor="gray.200">
       <Touchable borderless onPress={onPress}>
@@ -40,27 +34,13 @@ export function UsersSelector({
                   >
                     <Ionicions size={16} color="#fff" name="close-outline" />
                   </Center>
-                  <Image
-                    alt="profile photo"
-                    source={{
-                      uri: item.image
-                        ? `${baseURL}/${item.image}`
-                        : 'https://picsum.photos/200',
-                    }}
-                    boxSize={16}
-                    rounded="full"
-                  />
+                  <UserPhoto url={item.image} size={16} />
                 </Center>
               </Touchable>
             )}
             ListEmptyComponent={() => (
               <HStack alignItems="center" space={4}>
-                <Center
-                  borderWidth={1}
-                  rounded="full"
-                  boxSize={16}
-                  borderColor="gray.200"
-                >
+                <Center borderWidth={1} rounded="full" boxSize={16} borderColor="gray.200">
                   <Ionicions size={32} name="add" />
                 </Center>
                 <Heading size="md">Select members</Heading>

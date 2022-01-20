@@ -10,26 +10,25 @@ import {
   HStack,
   Icon,
   Skeleton,
-  Text,
   View,
   VStack,
 } from 'native-base';
 import React, { useCallback, useEffect, useState } from 'react';
-import { TeamsStackNavigatorParams } from '.';
 import { IGroup } from '~/api/group';
 import { getUserGroups } from '~/api/user';
 import { Touchable } from '~/components';
+import { GroupsStackNavigatorParams } from '.';
 
 interface IProjectProps {
   group: IGroup;
   navigation: any;
 }
 const Project = React.memo(
-  ({ group, navigation }: IProjectProps) => (
+  ({ group, navigation: { navigate } }: IProjectProps) => (
     <Box m={2} borderRadius={4} overflow="hidden">
-      <Touchable borderless onPress={() => {}}>
+      <Touchable borderless onPress={() => navigate('groups.single', { groupId: group.id })}>
         <HStack p={2} alignItems="center" space={4}>
-          <Box rounded={8} p={4} bg="#F6F6F6">
+          <Box rounded="full" p={4} bg="#F6F6F6">
             <Ionicons color="#7B8794" size={32} name="people-outline" />
           </Box>
           <Heading size="md">{group.name}</Heading>
@@ -59,7 +58,7 @@ const ListSkeleton = React.memo(() => (
 export function TeamsPage({
   navigation,
   route,
-}: NativeStackScreenProps<TeamsStackNavigatorParams, 'MainTeamsPage'>) {
+}: NativeStackScreenProps<GroupsStackNavigatorParams, 'groups.list'>) {
   const [groups, setGroups] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const isFocused = useIsFocused();
@@ -86,7 +85,9 @@ export function TeamsPage({
   return (
     <Box flex={1} safeArea>
       <VStack flex={1} space={4}>
-        <Heading textAlign="center">Grupos</Heading>
+        <Heading color="black" size="xl" textAlign="center">
+          Grupos
+        </Heading>
         <View flex={1}>
           <FlatList
             refreshing={refreshing}

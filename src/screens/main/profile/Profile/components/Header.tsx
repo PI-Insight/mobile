@@ -41,7 +41,7 @@ export function Header({ isSameUser }: IHeaderProps) {
           </Stack>
         </Touchable> */}
       </Stack>
-      <Heading textAlign="center" flex={1} color="#fff">
+      <Heading size="xl" textAlign="center" flex={1} color="#fff">
         Perfil
       </Heading>
       {isSameUser ? (

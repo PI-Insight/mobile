@@ -2,12 +2,12 @@ import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import { ParamListBase, RouteProp } from '@react-navigation/native';
+import { NavigatorScreenParams, ParamListBase, RouteProp } from '@react-navigation/native';
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import theme from '../../theme';
 import MainPage from '../screens/main/Index';
-import { ProfileNavigator } from '../screens/main/profile';
+import { ProfileNavigator, ProfileStackNavigatorParams } from '../screens/main/profile';
 import ProjectsNavigator from '../screens/main/projects';
 import { TeamsNavigator } from '../screens/main/teams';
 
@@ -45,41 +45,26 @@ function createConfig(params: NavigatorParams): BottomTabNavigationOptions {
     tabBarActiveTintColor: color,
     tabBarInactiveTintColor: color,
     // unmountOnBlur: true,
+    headerShown: false,
   };
 }
 
-export type MainStackParamList = {
+export type MainTabNavigatorParamList = {
   index: undefined;
   projects: undefined;
   groups: undefined;
-  profile: undefined;
+  profile: NavigatorScreenParams<ProfileStackNavigatorParams>;
 };
 
-const Tab = createBottomTabNavigator<MainStackParamList>();
+const Tab = createBottomTabNavigator<MainTabNavigatorParamList>();
 
 export default function LoggedInNavigator() {
   return (
     <Tab.Navigator screenOptions={createConfig}>
-      <Tab.Screen
-        options={{ headerShown: false, title: 'Início' }}
-        name="index"
-        component={MainPage}
-      />
-      <Tab.Screen
-        options={{ headerShown: false, title: 'Seus projetos' }}
-        name="projects"
-        component={ProjectsNavigator}
-      />
-      <Tab.Screen
-        options={{ headerShown: false, title: 'Seus times' }}
-        name="groups"
-        component={TeamsNavigator}
-      />
-      <Tab.Screen
-        options={{ headerShown: false, title: 'Seu perfil' }}
-        name="profile"
-        component={ProfileNavigator}
-      />
+      <Tab.Screen name="index" component={MainPage} />
+      <Tab.Screen name="projects" component={ProjectsNavigator} />
+      <Tab.Screen name="groups" component={TeamsNavigator} />
+      <Tab.Screen name="profile" component={ProfileNavigator} />
     </Tab.Navigator>
   );
 }

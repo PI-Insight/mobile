@@ -1,18 +1,29 @@
-import { useIsFocused } from '@react-navigation/native';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { CompositeScreenProps, useIsFocused } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Box, Fab, Heading, HStack, Icon, Image, Stack, Text, VStack } from 'native-base';
+import { Box, Divider, Fab, Heading, Icon, Image, Text, View, VStack } from 'native-base';
 import React, { useEffect, useState } from 'react';
+import { FlatList } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
 import { baseURL } from '~/api/base';
 import { getProject, IProject } from '~/api/project';
-import { Touchable } from '~/components';
+import { UserCard } from '~/components/UserCard';
+import { MainTabNavigatorParamList } from '~/navigation';
 import { RootState } from '~/store';
 import { IUSerSliceState } from '~/store/slices/user';
 import { ProjectStackNavigatorParams } from '.';
+import { ProfileStackNavigatorParams } from '../profile';
 
-type ProjectSingleProps = NativeStackScreenProps<ProjectStackNavigatorParams, 'project.single'>;
-export function ProjectSingle({ route }: ProjectSingleProps) {
+type ProjectSingleProps = CompositeScreenProps<
+  NativeStackScreenProps<ProjectStackNavigatorParams, 'project.single'>,
+  CompositeScreenProps<
+    BottomTabScreenProps<MainTabNavigatorParamList>,
+    NativeStackScreenProps<ProfileStackNavigatorParams>
+  >
+>;
+
+export function ProjectSingle({ route, navigation: { navigate } }: ProjectSingleProps) {
   const [project, setProject] = useState<IProject | null>(null);
   const user = useSelector<RootState, IUSerSliceState>((state) => state.user);
   const { projectId } = route.params;
@@ -47,18 +58,21 @@ export function ProjectSingle({ route }: ProjectSingleProps) {
 
         <VStack space={1}>
           <Heading size="sm">Time responsável</Heading>
-          <Box borderRadius={4} overflow="hidden">
-            <Touchable borderless>
-              <HStack p={2} alignItems="center" space={2}>
-                <Stack p={4} bg="#e5e5e5" rounded="full">
-                  <Icon color="gray.400" size="md" as={<Ionicons name="people-outline" />} />
-                </Stack>
-                <Heading color="primary.500" size="sm">
-                  Time
-                </Heading>
-              </HStack>
-            </Touchable>
-          </Box>
+          <View>
+            <FlatList
+              ItemSeparatorComponent={() => <Divider w="80%" mx="auto" my={1} />}
+              data={project.members}
+              renderItem={({ item }) => (
+                <UserCard
+                  onPress={() =>
+                    navigate('profile', { screen: 'profile.index', params: { userId: item.id } })
+                  }
+                  user={item}
+                />
+              )}
+              keyExtractor={(item) => item.id.toString()}
+            />
+          </View>
         </VStack>
         {project.owner!.id !== user.id && (
           <Fab

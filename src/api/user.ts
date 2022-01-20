@@ -1,7 +1,7 @@
-import { store } from '~/store';
 import { createAPICall, createFileForm, http } from '~/api/base';
 import { IGroup } from '~/api/group';
 import { IProject } from '~/api/project';
+import { store } from '~/store';
 
 export interface IUser {
   id: number;

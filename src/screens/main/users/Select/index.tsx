@@ -1,13 +1,21 @@
+import { CompositeScreenProps } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Box, Button, VStack } from 'native-base';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import { IUser, paginateUsers } from '~/api/user';
-import { CardUsers } from '~/components';
 import { UsersStackNavigatorParams } from '..';
+import { ProjectStackNavigatorParams } from '../../projects';
+import { CardUsers } from './components/CardUsers';
 
-type UsersSelectProps = NativeStackScreenProps<UsersStackNavigatorParams, 'users.select'>;
-export function Select({ navigation: { navigate }, route }: UsersSelectProps) {
+type PossibleCallers = ProjectStackNavigatorParams;
+
+type UsersSelectScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<UsersStackNavigatorParams, 'users.select'>,
+  NativeStackScreenProps<PossibleCallers>
+>;
+
+export function Select({ navigation: { navigate }, route }: UsersSelectScreenProps) {
   const limit = 10;
   const { selectedUsers, goto } = route.params;
 

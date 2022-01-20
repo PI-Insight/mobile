@@ -22,11 +22,7 @@ export async function login(username: string, password: string) {
   });
 }
 
-export async function register(
-  email: string,
-  username: string,
-  password: string,
-) {
+export async function register(email: string, username: string, password: string) {
   return createAPICall<ILoginResponse>(async () => {
     const response = await http.post<ILoginResponse>('/auth/register', {
       email,

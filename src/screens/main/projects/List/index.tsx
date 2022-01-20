@@ -3,20 +3,23 @@ import { useIsFocused } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Box, Divider, Fab, FlatList, Heading, Icon, View, VStack } from 'native-base';
 import React, { useCallback, useEffect, useState } from 'react';
+import { IProject } from '~/api/project';
 import { getUserProjects } from '~/api/user';
 import { ProjectStackNavigatorParams } from '..';
 import { Card, Skeleton } from './components';
 
 type ProjectListProps = NativeStackScreenProps<ProjectStackNavigatorParams, 'project.list'>;
 export function ProjectList({ navigation, route }: ProjectListProps) {
-  const [projects, setProjects] = useState<any[]>([]);
+  const [projects, setProjects] = useState<IProject[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const isFocused = useIsFocused();
 
   const refreshProjects = useCallback(() => {
     setRefreshing(true);
     getUserProjects()
-      .then(setProjects)
+      .then((projects) =>
+        setProjects(projects.sort((project) => new Date(project.createdAt).getTime()))
+      )
       .finally(() => setRefreshing(false));
   }, []);
 
@@ -28,14 +31,16 @@ export function ProjectList({ navigation, route }: ProjectListProps) {
     refreshProjects();
   }, []);
 
-  if (!projects.some((i) => i)) {
+  if (refreshing && !projects.some((i) => i)) {
     return <Skeleton />;
   }
 
   return (
     <Box flex={1} safeArea>
       <VStack flex={1} space={4}>
-        <Heading textAlign="center">Projetos</Heading>
+        <Heading color="black" size="xl" textAlign="center">
+          Projetos
+        </Heading>
         <View flex={1}>
           <FlatList
             refreshing={refreshing}

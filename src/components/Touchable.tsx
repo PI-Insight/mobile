@@ -1,4 +1,4 @@
-import { Box, useTheme } from 'native-base';
+import { useTheme } from 'native-base';
 import React from 'react';
 import {
   Platform,
@@ -36,10 +36,7 @@ export function Touchable({
 
   return (
     <TouchableNativeFeedback
-      background={TouchableNativeFeedback.Ripple(
-        rippleColor || color,
-        !!borderless,
-      )}
+      background={TouchableNativeFeedback.Ripple(rippleColor || color, !!borderless)}
       {...props}
       {...android}
     >

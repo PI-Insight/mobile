@@ -7,27 +7,32 @@ import { Touchable } from '~/components';
 
 interface IUsernameProps {
   user: IUser;
-  setUser: (user: IUser) => void;
   isSameUser: boolean;
 }
-export function Username({ isSameUser, user, setUser }: IUsernameProps) {
+export function Username({ isSameUser, user }: IUsernameProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(user.displayname);
+  const [name, setName] = useState('');
+  const [oldName, setOldName] = useState('');
   const usernameRef = useRef<HTMLElement | null>(null);
 
   const toggleEditing = () => {
     setIsEditing(!isEditing);
-    if (isEditing && name !== user.displayname) {
+    if (isEditing && name !== oldName) {
       setDisplayname(name)
-        .then(() => {
-          setUser({ ...user, displayname: name });
+        .then((user) => {
+          setOldName(name);
         })
         .catch((e) => {
-          setName(user.displayname);
+          setName(oldName);
           Alert.alert('Erro', e.message);
         });
     }
   };
+
+  useEffect(() => {
+    setName(user.displayname);
+    setOldName(user.displayname);
+  }, [user.displayname]);
 
   useEffect(() => {
     if (isEditing && usernameRef.current) {
@@ -47,6 +52,7 @@ export function Username({ isSameUser, user, setUser }: IUsernameProps) {
           size="2xl"
           fontSize="3xl"
           fontWeight="bold"
+          selectionColor="blue.200"
           onChange={(e) => setName(e.nativeEvent.text)}
           defaultValue={name}
           editable={isEditing}
@@ -64,5 +70,5 @@ export function Username({ isSameUser, user, setUser }: IUsernameProps) {
     );
   }
 
-  return <Heading textAlign="center">{user.displayname}</Heading>;
+  return <Heading textAlign="center">{name}</Heading>;
 }

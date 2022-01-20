@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react';
-import { Heading, HStack, VStack, Text, Image, Box, Stack, Fade } from 'native-base';
-import { IUser } from '~/api/user';
-import { baseURL } from '~/api/base';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Box, Heading, HStack, Stack, Text, VStack } from 'native-base';
+import React, { useCallback, useState } from 'react';
+import { IUser } from '~/api/user';
 import { Touchable } from '~/components/Touchable';
+import { UserPhoto } from '~/components/UserPhoto';
 
 interface ICardUsersProps {
   user: IUser;
@@ -22,14 +22,7 @@ export function CardUsers({ user, onSelect, selected }: ICardUsersProps) {
     <Box borderRadius={8} overflow="hidden">
       <Touchable onPress={() => toggleSelected()}>
         <HStack p={2} bg={isSelected ? 'blue.100' : 'white'} space={4}>
-          <Image
-            alt="profile photo"
-            source={{
-              uri: user.image ? `${baseURL}/${user.image}` : 'https://picsum.photos/200',
-            }}
-            boxSize={16}
-            rounded="full"
-          />
+          <UserPhoto url={user.image} size={16} />
           <VStack space={2}>
             <Heading size="md">{user.username}</Heading>
             <Text color="gray.500">Hello there!</Text>
